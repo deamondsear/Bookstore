@@ -1,15 +1,21 @@
-import express from 'express';
-import bodyParser from 'body-parser';
+const express = require('express');
+const bodyParser = require('body-parser');
+const db = require('./database/db');
+const PORT = require('./config').PORT;
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+  res.send('Welcome page');
+});
+
 const startServer = () => {
-  app.listen(port, () => {
-    console.log(`Your app is listening on port ${port}`);
+  db();
+  app.listen(PORT, () => {
+    console.log(`Your app is listening on port ${PORT}`);
   });
 };
 
