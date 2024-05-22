@@ -5,7 +5,7 @@ import client from './client.js';
 
 const router = new express.Router();
 
-router.use('/product', book);
-router.use('/user', client);
+router.use('/books', book);
+router.use('/clients', client);
 
 export default router;
