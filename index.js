@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 });
 
 const startServer = () => {
-  db();
+  db().sync();
   app.listen(PORT, () => {
     console.log(`Your app is listening on port ${PORT}`);
   });
