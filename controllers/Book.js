@@ -40,7 +40,7 @@ class Book {
       if (!req.params.id) {
         throw new Error('Please provide an id');
       }
-      const book = await ProductMapping.findByPk(req.params.id);
+      const book = await BookMapping.findByPk(req.params.id);
       if (!book) {
         throw new Error('No such book');
       }
@@ -60,7 +60,7 @@ class Book {
       if (!req.params.id) {
         throw new Error('Please provide an id');
       }
-      const product = await ProductMapping.findByPk(req.params.id);
+      const product = await BookMapping.findByPk(req.params.id);
       if (!product) {
         throw new Error('No such book');
       }
