@@ -1,12 +1,6 @@
-const { Sequelize } = require('sequelize');
-const { DB, DB_PASSWORD, DB_USER } = require('../config.js');
+import { sequelize } from '../models/mapping.js';
 
-module.exports = function db() {
-  const sequelize = new Sequelize(DB, DB_USER, DB_PASSWORD, {
-    dialect: 'postgres',
-    host: '127.0.0.1',
-  });
-
+export default function authSequelize() {
   sequelize
     .authenticate()
     .then(() => {
@@ -16,4 +10,4 @@ module.exports = function db() {
       console.error('Unable to connect to the database:', err);
     });
   return sequelize;
-};
+}

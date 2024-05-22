@@ -1,8 +1,8 @@
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 dotenv.config();
 
-module.exports.PORT = process.env.PORT || 3000;
-module.exports.DB = process.env.POSTGRES_DB;
-module.exports.DB_USER = process.env.POSTGRES_USER;
-module.exports.DB_PASSWORD = process.env.POSTGRES_PASSWORD;
+export const PORT = process.env.PORT || 3000;
+export const DB = process.env.POSTGRES_DB;
+export const DB_USER = process.env.POSTGRES_USER;
+export const DB_PASSWORD = process.env.POSTGRES_PASSWORD;

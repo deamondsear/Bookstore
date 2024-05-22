@@ -1,7 +1,7 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const db = require('./database/db');
-const PORT = require('./config').PORT;
+import express from 'express';
+import bodyParser from 'body-parser';
+import db from './database/db.js';
+import { PORT } from './config.js';
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 });
 
 const startServer = () => {
-  db().sync();
+  db().sync({ force: true });
   app.listen(PORT, () => {
     console.log(`Your app is listening on port ${PORT}`);
   });
