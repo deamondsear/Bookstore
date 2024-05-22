@@ -75,3 +75,4 @@ Client.hasMany(Order, { as: 'orders', onDelete: 'SET NULL' });
 Order.belongsTo(Client);
 
 export { sequelize };
+export { Client, Book, Basket, BasketBook, Order, OrderItem };
