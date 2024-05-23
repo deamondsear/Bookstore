@@ -14,6 +14,7 @@ app.use(cors());
 app.use('/', router);
 
 const startServer = () => {
+  //db is sequelize instance
   db().sync();
   app.listen(PORT, () => {
     console.log(`Your app is listening on port ${PORT}`);

@@ -1,4 +1,5 @@
 import express from 'express';
+// import an instance of Book CLASS
 import BookController from '../controllers/Book.js';
 const router = new express.Router();
 

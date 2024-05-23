@@ -1,3 +1,4 @@
+// import an instance of Client Model
 import { Client as ClientMapping } from '../models/mapping.js';
 
 class Client {
@@ -15,7 +16,7 @@ class Client {
 
   async getAll(req, res, next) {
     try {
-      const clients = ClientMapping.findAll();
+      const clients = await ClientMapping.findAll();
       res.json(clients);
     } catch (error) {
       next(error);
@@ -28,7 +29,7 @@ class Client {
         throw new Error('Please provide an id');
       }
       const client = await ClientMapping.findByPk(req.params.id);
-      if (!user) {
+      if (!client) {
         throw new Error('No such client');
       }
       res.json(client);
@@ -42,14 +43,13 @@ class Client {
       if (!req.params.id) {
         throw new Error('Please provide an id');
       }
-      const user = await ClientMapping.findByPk(req.params.id);
-      if (!user) {
+      const client = await ClientMapping.findByPk(req.params.id);
+      if (!client) {
         throw new Error('No such client');
       }
-      const name = req.body.name ?? user.name;
-      const password = req.body.password ?? user.password;
-      await user.update({ name, password });
-      res.json(user);
+      const name = req.body.name ?? client.name;
+      await client.update({ name });
+      res.json(client);
     } catch (error) {
       next(error);
     }

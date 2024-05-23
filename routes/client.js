@@ -1,4 +1,5 @@
 import express from 'express';
+// import an instance of Client CLASS
 import ClientController from '../controllers/Client.js';
 
 const router = new express.Router();

@@ -1,3 +1,4 @@
+// import an instance of Book Model
 import { Book as BookMapping } from '../models/mapping.js';
 
 class Book {
@@ -46,10 +47,12 @@ class Book {
       }
 
       //nullish coalescence
-      const name = req.body.name ?? product.name;
-      const price = req.body.price ?? product.price;
-      await product.update({ name, price });
-      res.json(product);
+      const name = req.body.name ?? book.name;
+      const price = req.body.price ?? book.price;
+      const author = req.body.author ?? book.author;
+      const quantity = req.body.quantity ?? book.quantity;
+      await book.update({ name, price, author, quantity });
+      res.json(book);
     } catch (error) {
       next(error);
     }
@@ -60,12 +63,12 @@ class Book {
       if (!req.params.id) {
         throw new Error('Please provide an id');
       }
-      const product = await BookMapping.findByPk(req.params.id);
-      if (!product) {
+      const book = await BookMapping.findByPk(req.params.id);
+      if (!book) {
         throw new Error('No such book');
       }
-      await product.destroy();
-      res.json(product);
+      await book.destroy();
+      res.json(book);
     } catch (error) {
       next(error);
     }
