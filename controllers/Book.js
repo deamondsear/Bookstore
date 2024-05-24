@@ -1,5 +1,7 @@
 // import an instance of Book Model
-import { Book as BookMapping } from '../models/mapping.js';
+import { Book as BookMapping, sequelize } from '../models/mapping.js';
+//for custom queries
+import { QueryTypes } from 'sequelize';
 
 class Book {
   async getAll(req, res, next) {
@@ -72,6 +74,40 @@ class Book {
     } catch (error) {
       next(error);
     }
+  }
+
+  async getBestsellers(req, res, next) {
+    try {
+      const bestsellers = await sequelize.query(
+        `SELECT "title", "author" FROM public."Books"
+      INNER JOIN public."OrderItems" ON public."Books".id = public."OrderItems"."BookId" 
+      GROUP BY title, author 
+      ORDER BY SUM("price" * public."OrderItems".quantity) 
+      DESC 
+      LIMIT 5;`,
+        {
+          type: QueryTypes.SELECT,
+          /*or "model:Book" based on how we able to responce*/
+        }
+      );
+      if (!bestsellers) {
+        throw new Error('Server error');
+      }
+      res.json(bestsellers);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAverageBill(req, res, next) {
+    try {
+      const avgBill = await sequelize.query(
+        `SELECT ROUND(AVG(total_price), 2) FROM public."Orders";`,
+        {
+          type: QueryTypes.SELECT,
+        }
+      );
+    } catch (error) {}
   }
 }
 
