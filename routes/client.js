@@ -4,6 +4,7 @@ import ClientController from '../controllers/Client.js';
 
 const router = new express.Router();
 
+//Don`t forget to use main router /clients
 router.post('/signup', ClientController.signup);
 router.post('/login', ClientController.login);
 router.get('/check', ClientController.check);

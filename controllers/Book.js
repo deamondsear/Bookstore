@@ -107,7 +107,13 @@ class Book {
           type: QueryTypes.SELECT,
         }
       );
-    } catch (error) {}
+      if (!avgBill) {
+        throw new Error('Server error');
+      }
+      res.json(avgBill);
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

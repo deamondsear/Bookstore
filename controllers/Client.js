@@ -60,12 +60,12 @@ class Client {
   async getMostValuable(req, res, next) {
     try {
       const mostValuableCliens = await sequelize.query(
-        `SELECT title FROM public."Clients" 
-      INNER JOIN public."Orders" ON public."Clients".id=public."Orders"."ClientId"
-      GROUP BY title
-      ORDER BY SUM(public."Orders"."total_price")
-      DESC
-      LIMIT 5;`,
+        `SELECT name FROM public."Clients" 
+        INNER JOIN public."Orders" ON public."Clients".id=public."Orders"."ClientId"
+        GROUP BY name
+        ORDER BY SUM(public."Orders"."total_price")
+        DESC
+        LIMIT 5;`,
         {
           type: QueryTypes.SELECT,
           /*or "model:Client" based on how we able to responce*/

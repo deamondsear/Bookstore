@@ -3,6 +3,7 @@ import express from 'express';
 import BookController from '../controllers/Book.js';
 const router = new express.Router();
 
+//Don`t forget to use main router /books
 router.get('/getall', BookController.getAll);
 router.get('/getone/:id([0-9]+)', BookController.getOne);
 router.get('/getBestsellers', BookController.getBestsellers);
