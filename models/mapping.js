@@ -18,8 +18,8 @@ const Client = sequelize.define('Client', {
     autoIncrement: true,
   },
   name: {
-    type: DataTypes.CHAR(),
-    unique: true, //ZACHEM?
+    type: DataTypes.STRING,
+    unique: true,
     allowNull: false,
   },
 });
@@ -27,7 +27,7 @@ const Client = sequelize.define('Client', {
 // Model Book
 const Book = sequelize.define('Book', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  name: { type: DataTypes.STRING, allowNull: false },
+  title: { type: DataTypes.STRING, allowNull: false },
   author: { type: DataTypes.STRING, allowNull: false },
   quantity: { type: DataTypes.INTEGER, defaultValue: 100000 },
   price: { type: DataTypes.INTEGER, allowNull: false },
