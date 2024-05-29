@@ -1,17 +1,18 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import { DB, DB_PASSWORD, DB_USER } from '../config.js';
+import { DB, DB_PASSWORD, DB_USER, HOST } from '../config.js';
 
 // DB instance
 const sequelize = new Sequelize(DB, DB_USER, DB_PASSWORD, {
   dialect: 'postgres',
-  host: '127.0.0.1',
+  host: HOST,
   define: {
     timestamps: false,
+    underscored: true,
   },
 });
 
 // Model Client
-const Client = sequelize.define('Client', {
+const Client = sequelize.define('client', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -25,12 +26,12 @@ const Client = sequelize.define('Client', {
 });
 
 // Model Book
-const Book = sequelize.define('Book', {
+const Book = sequelize.define('book', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   title: { type: DataTypes.STRING, allowNull: false },
   author: { type: DataTypes.STRING, allowNull: false },
-  quantity: { type: DataTypes.INTEGER, defaultValue: 100000 },
-  price: { type: DataTypes.INTEGER, allowNull: false },
+  stock: { type: DataTypes.INTEGER, defaultValue: 100000 },
+  actual_price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
 });
 
 // // Model Basket
@@ -44,15 +45,15 @@ const Book = sequelize.define('Book', {
 // });
 
 // Model Order
-const Order = sequelize.define('Order', {
+const Order = sequelize.define('order', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  total_price: { type: DataTypes.INTEGER },
 });
 
 //Model Items in Order
-const OrderItem = sequelize.define('OrderItem', {
+const OrderItem = sequelize.define('order_item', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   quantity: { type: DataTypes.INTEGER, allowNull: false },
+  sale_price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
 });
 
 // Table`s relations

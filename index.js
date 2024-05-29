@@ -15,7 +15,7 @@ app.use('/', router);
 
 const startServer = () => {
   //db is sequelize instance
-  db().sync();
+  db().sync({ force: true });
   app.listen(PORT, () => {
     console.log(`Your app is listening on port ${PORT}`);
   });

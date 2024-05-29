@@ -30,8 +30,8 @@ class Book {
 
   async create(req, res, next) {
     try {
-      const { name, author, quantity, price } = req.body;
-      const book = await BookMapping.create({ name, author, quantity, price });
+      const { title, author, quantity, price } = req.body;
+      const book = await BookMapping.create({ title, author, quantity, price });
       res.json(book);
     } catch (error) {
       next(error);
@@ -49,11 +49,11 @@ class Book {
       }
 
       //nullish coalescence
-      const name = req.body.name ?? book.name;
+      const title = req.body.title ?? book.title;
       const price = req.body.price ?? book.price;
       const author = req.body.author ?? book.author;
       const quantity = req.body.quantity ?? book.quantity;
-      await book.update({ name, price, author, quantity });
+      await book.update({ title, price, author, quantity });
       res.json(book);
     } catch (error) {
       next(error);
