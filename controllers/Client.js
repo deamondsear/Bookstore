@@ -1,5 +1,9 @@
 // import an instance of Client Model
-import { Client as ClientMapping, sequelize } from '../models/mapping.js';
+import {
+  Client as ClientMapping,
+  Order as OrderMapping,
+  sequelize,
+} from '../models/mapping.js';
 //for custom queries
 import { QueryTypes } from 'sequelize';
 
@@ -21,49 +25,53 @@ class Client {
       const clients = await ClientMapping.findAll();
       res.json(clients);
     } catch (error) {
-      next(error);
+      next();
+      res.json(error);
     }
   }
 
   async getOne(req, res, next) {
     try {
       if (!req.params.id) {
-        throw new Error('Please provide an id');
+        res.json({ error: 'Please provide an id' });
       }
       const client = await ClientMapping.findByPk(req.params.id);
       if (!client) {
-        throw new Error('No such client');
+        res.json({ error: 'No such client' });
       }
       res.json(client);
     } catch (error) {
-      next(error);
+      next();
+      res.json(error);
     }
   }
 
   async update(req, res, next) {
     try {
       if (!req.params.id) {
-        throw new Error('Please provide an id');
+        res.json({ error: 'Please provide an id' });
       }
       const client = await ClientMapping.findByPk(req.params.id);
       if (!client) {
-        throw new Error('No such client');
+        res.json({ error: 'No such client' });
       }
-      const name = req.body.name ?? client.name;
-      await client.update({ name });
+      const login = req.body.login ?? client.login;
+      await client.update({ login });
       res.json(client);
     } catch (error) {
-      next(error);
+      next();
+      res.json(error);
     }
   }
 
   async getMostValuable(req, res, next) {
     try {
       const mostValuableCliens = await sequelize.query(
-        `SELECT name FROM public."Clients" 
-        INNER JOIN public."Orders" ON public."Clients".id=public."Orders"."ClientId"
-        GROUP BY name
-        ORDER BY SUM(public."Orders"."total_price")
+        `SELECT login FROM clients
+        INNER JOIN orders ON clients.id=orders.client_id
+        INNER JOIN order_items ON orders.id=order_items.order_id
+        GROUP BY login
+        ORDER BY SUM(quantity*sale_price)
         DESC
         LIMIT 5;`,
         {
@@ -71,12 +79,30 @@ class Client {
           /*or "model:Client" based on how we able to responce*/
         }
       );
+
+      // const mostValuableCliens = await ClientMapping.findAll({
+      //   attributes: ['login'],
+      //   include: [
+      //     {
+      //       model: OrderMapping,
+      //       attributes: []
+      //     }
+      //   ],
+      //   group: ['login'],
+      //   order: [
+      //     [
+
+      //     ]
+      //   ]
+      // })
+
       if (!mostValuableCliens) {
-        throw new Error('Server error');
+        res.json({ error: 'Server error' });
       }
       res.json(mostValuableCliens);
     } catch (error) {
-      next(error);
+      next();
+      res.json(error);
     }
   }
 }

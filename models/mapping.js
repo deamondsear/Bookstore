@@ -18,7 +18,7 @@ const Client = sequelize.define('client', {
     primaryKey: true,
     autoIncrement: true,
   },
-  name: {
+  login: {
     type: DataTypes.STRING,
     unique: true,
     allowNull: false,
@@ -26,13 +26,23 @@ const Client = sequelize.define('client', {
 });
 
 // Model Book
-const Book = sequelize.define('book', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  title: { type: DataTypes.STRING, allowNull: false },
-  author: { type: DataTypes.STRING, allowNull: false },
-  stock: { type: DataTypes.INTEGER, defaultValue: 100000 },
-  actual_price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
-});
+const Book = sequelize.define(
+  'book',
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    title: { type: DataTypes.STRING, allowNull: false },
+    author: { type: DataTypes.STRING, allowNull: false },
+    stock: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 100000 },
+    actual_price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+  },
+  {
+    uniqueKeys: {
+      uniqueBook: {
+        fields: ['title', 'author'],
+      },
+    },
+  }
+);
 
 // // Model Basket
 // const Basket = sequelize.define('Basket', {
@@ -45,9 +55,21 @@ const Book = sequelize.define('book', {
 // });
 
 // Model Order
-const Order = sequelize.define('order', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-});
+const Order = sequelize.define(
+  'order',
+  {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  },
+  {
+    indexes: [
+      {
+        name: 'client_id_idx',
+        using: 'BTREE',
+        fields: ['client_id'],
+      },
+    ],
+  }
+);
 
 //Model Items in Order
 const OrderItem = sequelize.define('order_item', {
