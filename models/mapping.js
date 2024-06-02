@@ -18,7 +18,7 @@ const Client = sequelize.define('client', {
     primaryKey: true,
     autoIncrement: true,
   },
-  login: {
+  username: {
     type: DataTypes.STRING,
     unique: true,
     allowNull: false,

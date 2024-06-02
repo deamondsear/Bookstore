@@ -32,14 +32,12 @@ class Client {
 
   async getOne(req, res, next) {
     try {
-      if (!req.params.id) {
-        res.json({ error: 'Please provide an id' });
-      }
       const client = await ClientMapping.findByPk(req.params.id);
       if (!client) {
-        res.json({ error: 'No such client' });
+        res.status(400).send({ error: 'No such client' });
+      } else {
+        res.json(client);
       }
-      res.json(client);
     } catch (error) {
       next();
       res.json(error);
@@ -48,16 +46,14 @@ class Client {
 
   async update(req, res, next) {
     try {
-      if (!req.params.id) {
-        res.json({ error: 'Please provide an id' });
-      }
       const client = await ClientMapping.findByPk(req.params.id);
       if (!client) {
-        res.json({ error: 'No such client' });
+        res.status(400).send({ error: 'No such client' });
+      } else {
+        const username = req.body.username ?? client.username;
+        await client.update({ username });
+        res.json(client);
       }
-      const login = req.body.login ?? client.login;
-      await client.update({ login });
-      res.json(client);
     } catch (error) {
       next();
       res.json(error);
@@ -67,10 +63,10 @@ class Client {
   async getMostValuable(req, res, next) {
     try {
       const mostValuableCliens = await sequelize.query(
-        `SELECT login FROM clients
+        `SELECT username FROM clients
         INNER JOIN orders ON clients.id=orders.client_id
         INNER JOIN order_items ON orders.id=order_items.order_id
-        GROUP BY login
+        GROUP BY username
         ORDER BY SUM(quantity*sale_price)
         DESC
         LIMIT 5;`,
@@ -81,14 +77,14 @@ class Client {
       );
 
       // const mostValuableCliens = await ClientMapping.findAll({
-      //   attributes: ['login'],
+      //   attributes: ['username'],
       //   include: [
       //     {
       //       model: OrderMapping,
       //       attributes: []
       //     }
       //   ],
-      //   group: ['login'],
+      //   group: ['username'],
       //   order: [
       //     [
 
@@ -97,9 +93,10 @@ class Client {
       // })
 
       if (!mostValuableCliens) {
-        res.json({ error: 'Server error' });
+        res.status(500).send({ error: 'Server error' });
+      } else {
+        res.json(mostValuableCliens);
       }
-      res.json(mostValuableCliens);
     } catch (error) {
       next();
       res.json(error);

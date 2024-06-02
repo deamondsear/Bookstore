@@ -21,13 +21,14 @@ class Book {
   async getOne(req, res, next) {
     try {
       if (!req.params.id) {
-        res.json({ error: 'Please provide an id' });
+        res.status(400).send({ error: 'Please provide an id' });
       }
       const book = await BookMapping.findByPk(req.params.id);
       if (!book) {
-        res.json({ error: 'No such book' });
+        res.status(400).send({ error: 'No such book' });
+      } else {
+        res.json(book);
       }
-      res.json(book);
     } catch (error) {
       next();
       res.json(error);
@@ -47,21 +48,18 @@ class Book {
 
   async update(req, res, next) {
     try {
-      if (!req.params.id) {
-        res.json({ error: 'Please provide an id' });
-      }
       const book = await BookMapping.findByPk(req.params.id);
       if (!book) {
-        res.json({ error: 'No such book' });
+        res.status(400).send({ error: 'No such book' });
+      } else {
+        //nullish coalescence
+        const title = req.body.title ?? book.title;
+        const actual_price = req.body.actual_price ?? book.actual_price;
+        const author = req.body.author ?? book.author;
+        const stock = req.body.stock ?? book.stock;
+        await book.update({ title, actual_price, author, stock });
+        res.json(book);
       }
-
-      //nullish coalescence
-      const title = req.body.title ?? book.title;
-      const actual_price = req.body.actual_price ?? book.actual_price;
-      const author = req.body.author ?? book.author;
-      const stock = req.body.stock ?? book.stock;
-      await book.update({ title, actual_price, author, stock });
-      res.json(book);
     } catch (error) {
       next();
       res.json(error);
@@ -70,12 +68,9 @@ class Book {
 
   async delete(req, res, next) {
     try {
-      if (!req.params.id) {
-        res.json({ error: 'Please provide an id' });
-      }
       const book = await BookMapping.findByPk(req.params.id);
       if (!book) {
-        res.json({ error: 'No such book' });
+        res.status(400).send({ error: 'No such book' });
       }
       await book.destroy();
       res.json(book);
@@ -88,11 +83,11 @@ class Book {
   async getBestsellers(req, res, next) {
     try {
       const bestsellers = await sequelize.query(
-        `SELECT title, author FROM books 
-        INNER JOIN order_items ON books.id = order_items.book_id 
-        GROUP BY title, author 
-        ORDER BY SUM(sale_price * quantity) 
-        DESC 
+        `SELECT title, author FROM books
+        INNER JOIN order_items ON books.id = order_items.book_id
+        GROUP BY title, author
+        ORDER BY SUM(sale_price * quantity)
+        DESC
         LIMIT 5;`,
         {
           type: QueryTypes.SELECT,
@@ -111,19 +106,17 @@ class Book {
       //   group: ['title', 'author'],
       //   order: [
       //     [
-      //       sequelize.fn(
-      //         'SUM',
-      //         sequelize.literal('sale_price * quantity')
-      //       ),
+      //       sequelize.fn('SUM', sequelize.literal('sale_price * quantity')),
       //       'DESC',
       //     ],
       //   ],
       //   limit: 5,
       // });
       if (!bestsellers) {
-        res.json({ error: 'Server error' });
+        res.status(500).send({ error: 'Server error' });
+      } else {
+        res.json(bestsellers);
       }
-      res.json(bestsellers);
     } catch (error) {
       next();
       res.json(error);
@@ -139,9 +132,10 @@ class Book {
         }
       );
       if (!avgBill) {
-        res.json({ error: 'Server error' });
+        res.status(400).send({ error: 'Server error' });
+      } else {
+        res.json(avgBill);
       }
-      res.json(avgBill);
     } catch (error) {
       next();
       res.json(error);

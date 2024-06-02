@@ -12,6 +12,6 @@ router.get('/check', ClientController.check);
 router.get('/getall', ClientController.getAll);
 router.get('/getone/:id([0-9]+)', ClientController.getOne);
 router.get('/getMostValuable', ClientController.getMostValuable);
-router.put('/update/:id([0-9]+)', ClientController.update);
+router.patch('/update/:id([0-9]+)', ClientController.update);
 
 export default router;

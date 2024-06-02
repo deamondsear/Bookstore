@@ -12,6 +12,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/', router);
+app.use('/', (req, res) => {
+  res.status(400).send({ error: 'Empty directory' });
+});
 
 const startServer = () => {
   //db is sequelize instance
