@@ -20,17 +20,16 @@ class Client {
     res.status(200).send('Validate');
   }
 
-  async getAll(req, res, next) {
+  async getAll(req, res) {
     try {
       const clients = await ClientMapping.findAll();
       res.json(clients);
     } catch (error) {
-      next();
       res.json(error);
     }
   }
 
-  async getOne(req, res, next) {
+  async getOne(req, res) {
     try {
       const client = await ClientMapping.findByPk(req.params.id);
       if (!client) {
@@ -39,12 +38,11 @@ class Client {
         res.json(client);
       }
     } catch (error) {
-      next();
       res.json(error);
     }
   }
 
-  async update(req, res, next) {
+  async update(req, res) {
     try {
       const client = await ClientMapping.findByPk(req.params.id);
       if (!client) {
@@ -55,12 +53,11 @@ class Client {
         res.json(client);
       }
     } catch (error) {
-      next();
       res.json(error);
     }
   }
 
-  async getMostValuable(req, res, next) {
+  async getMostValuable(req, res) {
     try {
       const mostValuableCliens = await sequelize.query(
         `SELECT username FROM clients
@@ -98,7 +95,6 @@ class Client {
         res.json(mostValuableCliens);
       }
     } catch (error) {
-      next();
       res.json(error);
     }
   }

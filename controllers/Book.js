@@ -8,21 +8,17 @@ import {
 import { QueryTypes } from 'sequelize';
 
 class Book {
-  async getAll(req, res, next) {
+  async getAll(req, res) {
     try {
       const books = await BookMapping.findAll();
       res.json(books);
     } catch (error) {
-      next();
       res.json(error);
     }
   }
 
-  async getOne(req, res, next) {
+  async getOne(req, res) {
     try {
-      if (!req.params.id) {
-        res.status(400).send({ error: 'Please provide an id' });
-      }
       const book = await BookMapping.findByPk(req.params.id);
       if (!book) {
         res.status(400).send({ error: 'No such book' });
@@ -30,23 +26,21 @@ class Book {
         res.json(book);
       }
     } catch (error) {
-      next();
       res.json(error);
     }
   }
 
-  async create(req, res, next) {
+  async create(req, res) {
     try {
       // const { title, author, stock, actual_price } = req.body;
       const book = await BookMapping.create(req.body);
       res.json(book);
     } catch (error) {
-      next();
       res.json(error);
     }
   }
 
-  async update(req, res, next) {
+  async update(req, res) {
     try {
       const book = await BookMapping.findByPk(req.params.id);
       if (!book) {
@@ -61,12 +55,11 @@ class Book {
         res.json(book);
       }
     } catch (error) {
-      next();
       res.json(error);
     }
   }
 
-  async delete(req, res, next) {
+  async delete(req, res) {
     try {
       const book = await BookMapping.findByPk(req.params.id);
       if (!book) {
@@ -75,12 +68,11 @@ class Book {
       await book.destroy();
       res.json(book);
     } catch (error) {
-      next();
       res.json(error);
     }
   }
 
-  async getBestsellers(req, res, next) {
+  async getBestsellers(req, res) {
     try {
       const bestsellers = await sequelize.query(
         `SELECT title, author FROM books
@@ -118,12 +110,11 @@ class Book {
         res.json(bestsellers);
       }
     } catch (error) {
-      next();
       res.json(error);
     }
   }
 
-  async getAverageBill(req, res, next) {
+  async getAverageBill(req, res) {
     try {
       const avgBill = await sequelize.query(
         `SELECT ROUND(AVG(sale_price*quantity), 2) AS average_bill FROM order_items;`,
@@ -132,12 +123,11 @@ class Book {
         }
       );
       if (!avgBill) {
-        res.status(400).send({ error: 'Server error' });
+        res.status(500).send({ error: 'Server error' });
       } else {
         res.json(avgBill);
       }
     } catch (error) {
-      next();
       res.json(error);
     }
   }
